@@ -494,8 +494,18 @@ pub fn right_panel(app: &mut PdfCraftApp, ui: &mut egui::Ui) {
                     ui.horizontal(|ui| {
                         let label = ui.label(tl!("Search"));
                         let previous = bookmark_query.clone();
-                        let response =
-                            ui.add(egui::TextEdit::singleline(&mut bookmark_query).desired_width(ui.available_width() - 32.0)).labelled_by(label.id);
+                        let clear_button_width = 26.0;
+                        let gap = ui.spacing().item_spacing.x;
+                        let search_width =
+                            (ui.available_width() - clear_button_width - gap).max(0.0);
+
+                        let response = ui
+                            .add_sized(
+                                egui::vec2(search_width, ui.spacing().interact_size.y),
+                                egui::TextEdit::singleline(&mut bookmark_query)
+                                    .desired_width(0.0),
+                            )
+                            .labelled_by(label.id);
                         response.widget_info(|| {
                             let mut info = egui::WidgetInfo::text_edit(ui.is_enabled(), &previous, &bookmark_query, "");
                             info.label = Some(tl!("Search").to_string());
